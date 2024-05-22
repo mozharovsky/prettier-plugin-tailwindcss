@@ -1,5 +1,5 @@
 {
-  "name": "prettier-plugin-tailwindcss",
+  "name": "@mozharovsky/prettier-plugin-tailwindcss",
   "version": "0.5.14",
   "description": "A Prettier plugin for sorting Tailwind CSS classes.",
   "license": "MIT",
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/tailwindlabs/prettier-plugin-tailwindcss"
+    "url": "https://github.com/mozharovsky/prettier-plugin-tailwindcss"
   },
   "bugs": {
     "url": "https://github.com/tailwindlabs/prettier-plugin-tailwindcss/issues"
