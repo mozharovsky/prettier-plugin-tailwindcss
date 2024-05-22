@@ -2,6 +2,32 @@ export function bigSign(bigIntValue) {
   return (bigIntValue > 0n) - (bigIntValue < 0n)
 }
 
+function isValidClassStr(classStr) {
+  if (typeof classStr !== 'string' || classStr === '') {
+    return false
+  }
+
+  // Ignore class attributes containing `{{`, to match Prettier behavior:
+  // https://github.com/prettier/prettier/blob/main/src/language-html/embed.js#L83-L88
+  return !classStr.includes('{{')
+}
+
+function removeClassWhitespaces(classStr) {
+  if (!isValidClassStr(classStr)) {
+    return classStr
+  }
+
+  return classStr.trim().replace(/\s+/g, ' ')
+}
+
+function removeClassDuplicates(classStr) {
+  if (!isValidClassStr(classStr)) {
+    return classStr
+  }
+
+  return [...new Set(classStr.split(/\s+/))].join(' ')
+}
+
 function prefixCandidate(context, selector) {
   let prefix = context.tailwindConfig.prefix
   return typeof prefix === 'function' ? prefix(selector) : prefix + selector
@@ -43,13 +69,7 @@ export function sortClasses(
   classStr,
   { env, ignoreFirst = false, ignoreLast = false },
 ) {
-  if (typeof classStr !== 'string' || classStr === '') {
-    return classStr
-  }
-
-  // Ignore class attributes containing `{{`, to match Prettier behaviour:
-  // https://github.com/prettier/prettier/blob/main/src/language-html/embed.js#L83-L88
-  if (classStr.includes('{{')) {
+  if (!isValidClassStr(classStr)) {
     return classStr
   }
 
@@ -78,7 +98,11 @@ export function sortClasses(
     result += `${classes[i]}${whitespace[i] ?? ''}`
   }
 
-  return prefix + result + suffix
+  let sorted = prefix + result + suffix
+  sorted = removeClassWhitespaces(sorted)
+  sorted = removeClassDuplicates(sorted)
+
+  return sorted
 }
 
 export function sortClassList(classList, { env }) {
